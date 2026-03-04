@@ -1,17 +1,14 @@
 package com.wellsfargo.counselor.entity;
 
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import java.util.List;
 
 @Entity
 public class Advisor {
 
     @Id
-    @GeneratedValue()
-    private long advisorId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long advisorId;
 
     @Column(nullable = false)
     private String firstName;
@@ -28,16 +25,28 @@ public class Advisor {
     @Column(nullable = false)
     private String email;
 
-    protected Advisor() {
+    // 🔥 Relationships (Added According to ER Diagram)
 
+    @OneToMany(mappedBy = "advisor")
+    private List<Client> clients;
+
+    @OneToMany(mappedBy = "advisor")
+    private List<Portfolio> portfolios;
+
+    // Required by JPA
+    protected Advisor() {
     }
 
-    public Advisor(String firstName, String lastName, String address, String phone, String email) {
+    public Advisor(String firstName, String lastName, String address,
+                   String phone, String email,
+                   List<Client> clients, List<Portfolio> portfolios) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.address = address;
         this.phone = phone;
         this.email = email;
+        this.clients = clients;
+        this.portfolios = portfolios;
     }
 
     public Long getAdvisorId() {
@@ -82,5 +91,21 @@ public class Advisor {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public List<Client> getClients() {
+        return clients;
+    }
+
+    public void setClients(List<Client> clients) {
+        this.clients = clients;
+    }
+
+    public List<Portfolio> getPortfolios() {
+        return portfolios;
+    }
+
+    public void setPortfolios(List<Portfolio> portfolios) {
+        this.portfolios = portfolios;
     }
 }
